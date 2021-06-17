@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @Author xiao
+ * @Description 获取电子属数据
+ * @Date 9:11 2021-06-17
+ **/
 @RestController
 @RequestMapping("/ebook")
 public class EbookController {
