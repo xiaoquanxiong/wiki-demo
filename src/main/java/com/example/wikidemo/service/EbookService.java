@@ -4,8 +4,9 @@ package com.example.wikidemo.service;
 import com.example.wikidemo.domain.Ebook;
 import com.example.wikidemo.domain.EbookExample;
 import com.example.wikidemo.mapper.EbookMapper;
-import com.example.wikidemo.req.EbookReq;
-import com.example.wikidemo.resp.EbookResp;
+import com.example.wikidemo.req.EbookQueryReq;
+import com.example.wikidemo.req.EbookSaveReq;
+import com.example.wikidemo.resp.EbookQueryResp;
 import com.example.wikidemo.resp.PageResp;
 import com.example.wikidemo.utils.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -26,14 +27,13 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-
-    public PageResp<EbookResp> list(EbookReq ebookReq) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookQueryReq) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        if(!ObjectUtils.isEmpty(ebookReq.getName())){
-            criteria.andNameLike("%" + ebookReq.getName() + "%");
+        if(!ObjectUtils.isEmpty(ebookQueryReq.getName())){
+            criteria.andNameLike("%" + ebookQueryReq.getName() + "%");
         }
-        PageHelper.startPage(ebookReq.getPage(), ebookReq.getSize());
+        PageHelper.startPage(ebookQueryReq.getPage(), ebookQueryReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -47,11 +47,28 @@ public class EbookService {
 //            respList.add(ebookResp);
 //        }
         //列表复制
-        List<EbookResp> respList = CopyUtil.copyList(ebookList,EbookResp.class);
+        List<EbookQueryResp> respList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
         PageResp pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(respList);
         return pageResp;
     }
 
+    /**
+     * @Author xiao
+     * @Description 支持新增、更新
+     * @Date 16:50 2021-06-18
+     * @Param [ebookSaveReq]
+     * @return void
+     **/
+    public void save(EbookSaveReq ebookSaveReq) {
+        Ebook ebook = CopyUtil.copy(ebookSaveReq, Ebook.class);
+        if(ObjectUtils.isEmpty(ebook.getId())){
+            //新增
+            ebookMapper.insert(ebook);
+        }else {
+            //更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+    }
 }
