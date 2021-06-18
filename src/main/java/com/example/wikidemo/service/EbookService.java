@@ -7,6 +7,8 @@ import com.example.wikidemo.mapper.EbookMapper;
 import com.example.wikidemo.req.EbookReq;
 import com.example.wikidemo.resp.EbookResp;
 import com.example.wikidemo.utils.CopyUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,12 @@ public class EbookService {
         if(!ObjectUtils.isEmpty(ebookReq.getName())){
             criteria.andNameLike("%" + ebookReq.getName() + "%");
         }
+        PageHelper.startPage(1, 3);
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("总行数:{}",pageInfo.getTotal());
+        LOG.info("总页数:{}",pageInfo.getPages());
 //        List<EbookResp> respList = new ArrayList<>();
 //        for(Ebook ebook : ebookList){
 //            EbookResp ebookResp = new EbookResp();
