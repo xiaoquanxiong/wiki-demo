@@ -6,6 +6,7 @@ import com.example.wikidemo.domain.EbookExample;
 import com.example.wikidemo.mapper.EbookMapper;
 import com.example.wikidemo.req.EbookReq;
 import com.example.wikidemo.resp.EbookResp;
+import com.example.wikidemo.resp.PageResp;
 import com.example.wikidemo.utils.CopyUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -26,13 +27,13 @@ public class EbookService {
     private EbookMapper ebookMapper;
 
 
-    public List<EbookResp> list(EbookReq ebookReq) {
+    public PageResp<EbookResp> list(EbookReq ebookReq) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if(!ObjectUtils.isEmpty(ebookReq.getName())){
             criteria.andNameLike("%" + ebookReq.getName() + "%");
         }
-        PageHelper.startPage(1, 3);
+        PageHelper.startPage(ebookReq.getPage(), ebookReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -47,7 +48,10 @@ public class EbookService {
 //        }
         //列表复制
         List<EbookResp> respList = CopyUtil.copyList(ebookList,EbookResp.class);
-        return respList;
+        PageResp pageResp = new PageResp();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(respList);
+        return pageResp;
     }
 
 }
