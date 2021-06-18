@@ -9,6 +9,7 @@ import com.example.wikidemo.req.EbookSaveReq;
 import com.example.wikidemo.resp.EbookQueryResp;
 import com.example.wikidemo.resp.PageResp;
 import com.example.wikidemo.utils.CopyUtil;
+import com.example.wikidemo.utils.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq ebookQueryReq) {
         EbookExample ebookExample = new EbookExample();
@@ -65,6 +69,7 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(ebookSaveReq, Ebook.class);
         if(ObjectUtils.isEmpty(ebook.getId())){
             //新增
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else {
             //更新
