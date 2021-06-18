@@ -74,7 +74,7 @@
 import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import Axios from "axios";
 
-const listData: any = [];
+/*const listData: any = [];
 for (let i = 0; i < 23; i++) {
   listData.push({
     href: 'https://www.antdv.com/',
@@ -85,33 +85,38 @@ for (let i = 0; i < 23; i++) {
     content:
         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
   });
-}
+}*/
 export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();
-    const ebooks2 = reactive({books:[]});
+    // const ebooks2 = reactive({books:[]});
 
     onMounted(() => {
-      Axios.get("/ebook/list").then(
+      Axios.get("/ebook/list", {
+        params: {
+          page: 1,
+          size: 0
+        }
+      }).then(
           (response)=>{
             const data = response.data;
-            ebooks.value = data.content;
-            ebooks2.books = data.content;
+            ebooks.value = data.content.list;
+            // ebooks2.books = data.content.list;
           }
       )
     });
 
     return {
       ebooks,
-      ebooks02: toRef(ebooks2, "books"),
-      listData,
-      pagination: {
-        onChange: (page: number) => {
-          console.log(page);
-        },
-        pageSize: 3,
-      },
+      // ebooks02: toRef(ebooks2, "books"),
+      // listData,
+      // pagination: {
+      //   onChange: (page: number) => {
+      //     console.log(page);
+      //   },
+      //   pageSize: 3,
+      // },
       actions: [
         { type: 'StarOutlined', text: '156' },
         { type: 'LikeOutlined', text: '156' },
