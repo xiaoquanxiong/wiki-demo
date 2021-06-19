@@ -31,10 +31,26 @@ public class CategoryService {
     @Resource
     private SnowFlake snowFlake;
 
+    public List<CategoryQueryResp> all(CategoryQueryReq categoryQueryReq) {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        if(!ObjectUtils.isEmpty(categoryQueryReq.getName())){
+            CategoryExample.Criteria criteria = categoryExample.createCriteria();
+            criteria.andNameLike("%" + categoryQueryReq.getName() + "%");
+        }
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+;
+        //列表复制
+        List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return respList;
+    }
+
     public PageResp<CategoryQueryResp> list(CategoryQueryReq categoryQueryReq) {
         CategoryExample categoryExample = new CategoryExample();
-        CategoryExample.Criteria criteria = categoryExample.createCriteria();
+        categoryExample.setOrderByClause("sort asc");
         if(!ObjectUtils.isEmpty(categoryQueryReq.getName())){
+            CategoryExample.Criteria criteria = categoryExample.createCriteria();
             criteria.andNameLike("%" + categoryQueryReq.getName() + "%");
         }
         PageHelper.startPage(categoryQueryReq.getPage(), categoryQueryReq.getSize());
@@ -87,4 +103,5 @@ public class CategoryService {
     public void delete(Long id) {
         categoryMapper.deleteByPrimaryKey(id);
     }
+
 }

@@ -3,14 +3,15 @@ package com.example.wikidemo.controller;
 
 import com.example.wikidemo.req.CategoryQueryReq;
 import com.example.wikidemo.req.CategorySaveReq;
-import com.example.wikidemo.resp.CommonResp;
 import com.example.wikidemo.resp.CategoryQueryResp;
+import com.example.wikidemo.resp.CommonResp;
 import com.example.wikidemo.resp.PageResp;
 import com.example.wikidemo.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author xiao
@@ -23,6 +24,14 @@ public class CategoryController {
 
     @Resource
     private CategoryService categoryService;
+
+    @GetMapping("/all")
+    public CommonResp all(CategoryQueryReq categoryQueryReq) {
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all(categoryQueryReq);
+        resp.setContent(list);
+        return resp;
+    }
 
     @GetMapping("/list")
     public CommonResp list(@Valid CategoryQueryReq categoryQueryReq) {
