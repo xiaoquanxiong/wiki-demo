@@ -132,10 +132,16 @@ export default defineComponent({
       }).then((response) => {
         loading.value = false;
         const data = response.data;
-        ebooks.value = data.content.list;
-        //重置分页按钮
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+        if(data.success){
+          ebooks.value = data.content.list;
+
+          //重置分页按钮
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        }else {
+          message.error(data.message);
+        }
+
       });
     };
     /**

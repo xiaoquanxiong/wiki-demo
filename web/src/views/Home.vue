@@ -96,7 +96,7 @@ export default defineComponent({
       Axios.get("/ebook/list", {
         params: {
           page: 1,
-          size: 0
+          size: 1000
         }
       }).then(
           (response)=>{
