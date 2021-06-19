@@ -60,7 +60,7 @@ public class EbookService {
 
     /**
      * @Author xiao
-     * @Description 支持新增、更新
+     * @Description 支持新增、更新电子书
      * @Date 16:50 2021-06-18
      * @Param [ebookSaveReq]
      * @return void
@@ -75,5 +75,16 @@ public class EbookService {
             //更新
             ebookMapper.updateByPrimaryKey(ebook);
         }
+    }
+
+    /*
+     * @Author xiao
+     * @Description //删除电子书
+     * @Date 17:49 2021-06-18
+     * @Param [id]
+     * @return void
+     **/
+    public void delete(Long id) {
+        ebookMapper.deleteByPrimaryKey(id);
     }
 }
